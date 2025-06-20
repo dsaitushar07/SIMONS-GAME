@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simons Game - Memory Challenge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@300;400;700;900&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        /* font-family: "Orbitron", monospace; */
+        font-family: "Michroma", sans-serif;
+
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        color: #ffffff;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Animated background */
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .floating-shape {
+        position: absolute;
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.1),
+          rgba(255, 0, 255, 0.1)
+        );
+        border-radius: 50%;
+        animation: float-around 15s infinite linear;
+      }
+
+      @keyframes float-around {
+        0% {
+          transform: translateY(100vh) translateX(0) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.3;
+        }
+        90% {
+          opacity: 0.3;
+        }
+        100% {
+          transform: translateY(-100px) translateX(200px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* Header navigation */
+      .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        padding: 15px 0;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .nav-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: #00ffff;
+        text-shadow: 0 0 20px #4802fa;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .nav-link::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .nav-link:hover::before {
+        left: 100%;
+      }
+
+      .nav-link:hover {
+        color: #00ffff;
+        background: rgba(0, 255, 255, 0.1);
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+
+      .nav-icon {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+
+      /* Mobile menu toggle */
+      .mobile-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      .mobile-toggle span {
+        width: 25px;
+        height: 3px;
+        background: #00ffff;
+        margin: 3px 0;
+        transition: 0.3s;
+      }
+
+      /* Main content */
+      .main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 120px 20px 40px;
+        position: relative;
+        z-index: 10;
+      }
+
+      .hero-section {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+
+      .game-title {
+        font-family: "Audiowide", sans-serif;
+
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 900;
+        color: #00ffff;
+        /* text-shadow: 0 0 30px #00ffff; */
+        margin-bottom: 15px;
+        /* animation: pulse-glow 3s ease-in-out infinite; */
+      }
+
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          text-shadow: 0 0 30px #00ffff, 0 0 40px #00ffff;
+        }
+        50% {
+          text-shadow: 0 0 40px #00ffff, 0 0 50px #00ffff, 0 0 60px #00ffff;
+        }
+      }
+
+      .game-subtitle {
+        font-size: 1.2rem;
+        color: #888;
+        letter-spacing: 3px;
+        margin-bottom: 40px;
+      }
+
+      /* Rules section */
+      .rules-section {
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .rules-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 255, 255, 0.05),
+          rgba(255, 0, 255, 0.05)
+        );
+        border-radius: 20px;
+        z-index: -1;
+        opacity: 0.8;
+        animation: subtle-glow 4s ease-in-out infinite;
+      }
+
+      @keyframes subtle-glow {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.6;
+          transform: scale(1.02);
+        }
+      }
+
+      .rules-title {
+        font-size: 2rem;
+        color: #00ffff;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+      }
+
+      .rules-list {
+        list-style: none;
+        counter-reset: rule-counter;
+      }
+
+      .rule-item {
+        counter-increment: rule-counter;
+        margin-bottom: 20px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        border-left: 4px solid #00ffff;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .rule-item::before {
+        content: counter(rule-counter);
+        position: absolute;
+        left: -15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(45deg, #00ffff, #0088ff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        color: #000;
+      }
+
+      .rule-item:hover {
+        background: rgba(0, 255, 255, 0.1);
+        transform: translateX(10px);
+        box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+      }
+
+      /* Play button */
+      .play-section {
+        text-align: center;
+        margin-top: 40px;
+      }
+
+      .play-button {
+        background: linear-gradient(45deg, #ff00ff, #ff0080);
+        border: none;
+        color: #ffffff;
+        font-size: 1.5rem;
+        font-family: "Orbitron", monospace;
+        font-weight: 700;
+        padding: 20px 60px;
+        border-radius: 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(255, 0, 255, 0.3);
+      }
+
+      .play-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .play-button:hover::before {
+        left: 100%;
+      }
+
+      .play-button:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(255, 0, 255, 0.5);
+        background: linear-gradient(45deg, #ff0080, #ff00ff);
+      }
+
+      .play-button:active {
+        transform: translateY(-2px);
+      }
+
+      /* Responsive design */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.95);
+          flex-direction: column;
+          padding: 20px;
+          gap: 15px;
+          backdrop-filter: blur(20px);
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .mobile-toggle {
+          display: flex;
+        }
+
+        .mobile-toggle.active span:nth-child(1) {
+          transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .mobile-toggle.active span:nth-child(2) {
+          opacity: 0;
+        }
+
+        .mobile-toggle.active span:nth-child(3) {
+          transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        .main-content {
+          padding-top: 100px;
+        }
+
+        .rules-section {
+          padding: 30px 20px;
+        }
+
+        .rule-item {
+          padding: 15px;
+          margin-left: 15px;
+        }
+
+        .play-button {
+          padding: 15px 40px;
+          font-size: 1.2rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .nav-container {
+          padding: 0 15px;
+        }
+
+        .main-content {
+          padding: 90px 15px 30px;
+        }
+
+        .rules-section {
+          padding: 20px 15px;
+        }
+
+        .rule-item {
+          margin-left: 10px;
+          padding: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-animation" id="bgAnimation"></div>
+
+    <header class="header">
+      <div class="nav-container">
+        <div class="logo">Hello <%=user1.username%></div>
+        <nav class="nav-links" id="navLinks">
+          <a href="/user/<%=user1.id%>/profile" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+              />
+            </svg>
+            User Profile
+          </a>
+          <a href="/user/<%=user1.id%>/leaderboard" class="nav-link">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+              <path
+                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+              />
+            </svg>
+            Leaderboard
+          </a>
+        </nav>
+        <div class="mobile-toggle" id="mobileToggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="hero-section">
+        <h1 class="game-title">SIMONS GAME</h1>
+        <p class="game-subtitle">MEMORY CHALLENGE</p>
+      </section>
+
+      <section class="rules-section">
+        <h3 class="rules-title">Game Rules</h3>
+        <ol class="rules-list">
+          <li class="rule-item">
+            <strong>Start the Game:</strong> The game begins with Simon showing
+            a sequence of 1 random color (e.g. "Red").
+          </li>
+          <li class="rule-item">
+            <strong>Player's Turn:</strong> The player must repeat the exact
+            sequence by clicking or pressing the color buttons in the same
+            order.
+          </li>
+          <li class="rule-item">
+            <strong>Next Round:</strong> If the player gets it right, Simon adds
+            1 more random color to the sequence.
+          </li>
+          <li class="rule-item">
+            <strong>Repeat:</strong> The player now has to remember and repeat a
+            longer sequence (e.g. "Red, Blue").
+          </li>
+          <li class="rule-item">
+            <strong>Wrong Input:</strong> If the player clicks the wrong color,
+            the game ends.
+          </li>
+          <li class="rule-item">
+            <strong>Game Progression:</strong> The game continues, adding 1
+            color each round, increasing difficulty as the sequence grows.
+          </li>
+        </ol>
+      </section>
+
+      <section class="play-section">
+        <form method="get" action="/user/<%=user1.id%>/game">
+          <button type="submit" class="play-button" id="playButton">
+            PLAY NOW
+          </button>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      // Background animation
+      function createFloatingShapes() {
+        const bgAnimation = document.getElementById("bgAnimation");
+        const shapes = ["circle", "square", "triangle"];
+
+        for (let i = 0; i < 20; i++) {
+          const shape = document.createElement("div");
+          shape.className = "floating-shape";
+          shape.style.width = Math.random() * 60 + 20 + "px";
+          shape.style.height = shape.style.width;
+          shape.style.left = Math.random() * 100 + "%";
+          shape.style.animationDelay = Math.random() * 15 + "s";
+          shape.style.animationDuration = Math.random() * 10 + 10 + "s";
+
+          if (Math.random() > 0.5) {
+            shape.style.borderRadius = "0";
+            shape.style.transform = "rotate(45deg)";
+          }
+
+          bgAnimation.appendChild(shape);
+        }
+      }
+
+      // Mobile menu toggle
+      const mobileToggle = document.getElementById("mobileToggle");
+      const navLinks = document.getElementById("navLinks");
+
+      mobileToggle.addEventListener("click", function () {
+        this.classList.toggle("active");
+        navLinks.classList.toggle("active");
+      });
+
+      // Smooth scroll for navigation links
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          // e.preventDefault();
+
+          // Add click effect
+          this.style.transform = "scale(0.95)";
+          setTimeout(() => {
+            this.style.transform = "scale(1)";
+          }, 150);
+
+          // Close mobile menu if open
+          navLinks.classList.remove("active");
+          mobileToggle.classList.remove("active");
+        });
+      });
+
+      // Play button effect
+      const playButton = document.getElementById("playButton");
+      playButton.addEventListener("click", function (e) {
+        // Ripple effect
+        const ripple = document.createElement("span");
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: button-ripple 0.6s ease-out;
+                pointer-events: none;
+            `;
+
+        this.appendChild(ripple);
+
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+
+      // Rule items animation on scroll
+      function animateOnScroll() {
+        const ruleItems = document.querySelectorAll(".rule-item");
+        const windowHeight = window.innerHeight;
+
+        ruleItems.forEach((item, index) => {
+          const itemTop = item.getBoundingClientRect().top;
+
+          if (itemTop < windowHeight - 100) {
+            setTimeout(() => {
+              item.style.opacity = "1";
+              item.style.transform = "translateX(0)";
+            }, index * 100);
+          }
+        });
+      }
+
+      // Initialize rule items as hidden
+      document.querySelectorAll(".rule-item").forEach((item) => {
+        item.style.opacity = "0";
+        item.style.transform = "translateX(-50px)";
+        item.style.transition = "all 0.6s ease";
+      });
+
+      // Header scroll effect
+      let lastScrollTop = 0;
+      const header = document.querySelector(".header");
+
+      window.addEventListener("scroll", function () {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop && scrollTop > 100) {
+          header.style.transform = "translateY(-100%)";
+        } else {
+          header.style.transform = "translateY(0)";
+        }
+
+        lastScrollTop = scrollTop;
+        animateOnScroll();
+      });
+
+      // Add ripple animation CSS
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes button-ripple {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+        `;
+      document.head.appendChild(style);
+
+      // Initialize
+      window.addEventListener("load", function () {
+        createFloatingShapes();
+        animateOnScroll();
+      });
+
+      // Prevent layout shift
+      window.addEventListener("resize", function () {
+        if (window.innerWidth > 768) {
+          navLinks.classList.remove("active");
+          mobileToggle.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,610 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simons Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #0b2b2f 0%, #1e2228 100%);
+        min-height: 100vh;
+        color: #cedae6;
+        line-height: 1.6;
+      }
+
+      .main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .hero-section {
+        text-align: center;
+        margin-bottom: 4rem;
+        padding: 3rem 2rem;
+        background: rgba(51, 49, 49, 0.9);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .game-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #dadee1;
+        margin-bottom: 0.5rem;
+        letter-spacing: 3px;
+      }
+
+      .game-subtitle {
+        font-size: 1.3rem;
+        color: #c4d7d8;
+        font-weight: 300;
+        letter-spacing: 2px;
+      }
+
+      .section-title {
+        font-size: 2rem;
+        color: #bec4cb;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      .card {
+        background: rgba(40, 52, 53, 0.95);
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #f39c12);
+        border-radius: 15px 15px 0 0;
+      }
+
+      .card-number {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #1c1e24 0%, #27202e 100%);
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 30px;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .card-content {
+        color: #d9dde1;
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .card-content strong {
+        color: #bec6ce;
+        font-weight: 600;
+      }
+
+      .benefits-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .benefit-card {
+        background: rgba(40, 52, 53, 0.95);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-align: center;
+      }
+
+      .benefit-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .benefit-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #9ea1ad 0%, #372f3e 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      .benefit-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #abc7c7;
+        margin-bottom: 0.5rem;
+      }
+
+      .benefit-description {
+        color: #adc6c6;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .play-section {
+        text-align: center;
+        margin-top: 4rem;
+      }
+
+      .play-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1rem 3rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .play-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+      }
+
+      .play-button:active {
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 1rem;
+        }
+
+        .game-title {
+          font-size: 2.5rem;
+        }
+
+        .cards-container {
+          grid-template-columns: 1fr;
+        }
+
+        .benefits-cards {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main-content">
+      <section class="hero-section">
+        <h1 class="game-title">SIMONS GAME</h1>
+        <p class="game-subtitle">MEMORY CHALLENGE</p>
+      </section>
+      <section class="play-section">
+        <form method="get" action="/user">
+          <button type="submit" class="play-button" id="playButton">
+            GET STARTED
+          </button>
+        </form>
+      </section>
+      <section class="history-section">
+        <h3 class="section-title">History about Simons Game</h3>
+        <div class="cards-container">
+          <div class="card">
+            <div class="card-number">1</div>
+            <div class="card-content">
+              The original game, Simon, launched in 1978, became a global
+              sensation because it merged lights, sounds, and sequences—just
+              like yours does in a modern way.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-number">2</div>
+            <div class="card-content">
+              This game was based on a psychological concept called the "serial
+              position effect", which studies how people remember sequences.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="facts-section">
+        <h3 class="section-title">Why play Simons Game</h3>
+        <div class="benefits-cards">
+          <div class="benefit-card">
+            <div class="benefit-icon">🧠</div>
+            <div class="benefit-title">Train Your Memory</div>
+            <div class="benefit-description">
+              Follow the patterns and remember the sequence — every round helps
+              improve your memory power.
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🎯</div>
+            <div class="benefit-title">Sharpen Your Focus</div>
+            <div class="benefit-description">
+              Stay alert and concentrate — perfect for building better attention
+              skills.
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">⚡</div>
+            <div class="benefit-title">React Faster</div>
+            <div class="benefit-description">
+              As levels get quicker, your brain and reflexes learn to respond in
+              lightning time.
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">💪</div>
+            <div class="benefit-title">Build Persistence</div>
+            <div class="benefit-description">
+              Didn't get the sequence right? Try again. Every attempt builds
+              resilience and determination.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simons Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        background-color: #0f0f0f;
+        min-height: 100vh;
+        color: #e5e5e5;
+        line-height: 1.6;
+      }
+
+      .main-content {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+
+      .hero-section {
+        text-align: center;
+        margin-bottom: 5rem;
+        padding: 4rem 2rem;
+        background: #1a1a1a;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        border: 1px solid #2a2a2a;
+      }
+
+      .game-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, #ffffff 0%, #a8a8a8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+      }
+
+      .game-title::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #666666, transparent);
+      }
+
+      .game-subtitle {
+        font-size: 1.2rem;
+        color: #888888;
+        font-weight: 300;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: 1rem;
+      }
+
+      .section-title {
+        font-size: 1.8rem;
+        color: #ffffff;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        font-weight: 400;
+      }
+
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+      }
+
+      .card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        border: 1px solid #2a2a2a;
+        position: relative;
+      }
+
+      .card-number {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        background: #404040;
+        color: white;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 28px;
+        font-weight: 500;
+        margin-bottom: 1.2rem;
+        font-size: 0.85rem;
+      }
+
+      .card-content {
+        color: #cccccc;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .benefits-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+      }
+
+      .benefit-card {
+        background: #1a1a1a;
+        border-radius: 12px;
+        padding: 2rem 1.5rem;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        border: 1px solid #2a2a2a;
+        text-align: center;
+      }
+
+      .benefit-icon {
+        width: 48px;
+        height: 48px;
+        background: #333333;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+        font-size: 1.4rem;
+        color: white;
+      }
+
+      .benefit-title {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #ffffff;
+        margin-bottom: 0.8rem;
+      }
+
+      .benefit-description {
+        color: #aaaaaa;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .play-section {
+        text-align: center;
+        margin-top: 4rem;
+      }
+
+      .play-button {
+        background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+        color: white;
+        border: 2px solid #404040;
+        padding: 1.2rem 3rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        cursor: pointer;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .play-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .play-button:hover {
+        background: linear-gradient(135deg, #404040 0%, #2a2a2a 100%);
+        border-color: #555555;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .play-button:hover::before {
+        left: 100%;
+      }
+
+      .play-button:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      @media (max-width: 768px) {
+        .main-content {
+          padding: 2rem 1rem;
+        }
+
+        .hero-section {
+          padding: 3rem 1.5rem;
+          margin-bottom: 3rem;
+        }
+
+        .game-title {
+          font-size: 2.2rem;
+        }
+
+        .cards-container {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .benefits-cards {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .card,
+        .benefit-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main-content">
+      <section class="hero-section">
+        <h1 class="game-title">Simon's Game</h1>
+        <p class="game-subtitle">Memory Challenge</p>
+      </section>
+
+      <section class="play-section">
+        <form method="get" action="/user">
+          <button type="submit" class="play-button" id="playButton">
+            Get Started
+          </button>
+        </form>
+      </section>
+
+      <section class="history-section">
+        <h3 class="section-title">History about Simon's Game</h3>
+        <div class="cards-container">
+          <div class="card">
+            <div class="card-number">1</div>
+            <div class="card-content">
+              The original game, Simon, launched in 1978, became a global
+              sensation because it merged lights, sounds, and sequences—just
+              like yours does in a modern way.
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-number">2</div>
+            <div class="card-content">
+              This game was based on a psychological concept called the "serial
+              position effect", which studies how people remember sequences.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="facts-section">
+        <h3 class="section-title">Why play Simon's Game</h3>
+        <div class="benefits-cards">
+          <div class="benefit-card">
+            <div class="benefit-icon">🧠</div>
+            <div class="benefit-title">Train Your Memory</div>
+            <div class="benefit-description">
+              Follow the patterns and remember the sequence — every round helps
+              improve your memory power.
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🎯</div>
+            <div class="benefit-title">Sharpen Your Focus</div>
+            <div class="benefit-description">
+              Stay alert and concentrate — perfect for building better attention
+              skills.
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">⚡</div>
+            <div class="benefit-title">React Faster</div>
+            <div class="benefit-description">
+              As levels get quicker, your brain and reflexes learn to respond in
+              lightning time.
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">💪</div>
+            <div class="benefit-title">Build Persistence</div>
+            <div class="benefit-description">
+              Didn't get the sequence right? Try again. Every attempt builds
+              resilience and determination.
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

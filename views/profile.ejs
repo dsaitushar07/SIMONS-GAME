@@ -1,0 +1,353 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Welcome, <%= user.username %></h1>
+    <p>Email: <%= user.email %></p>
+    <p>High Score: <%= user.hscore %></p>
+    <form>
+      <button>Edit Profile</button>
+    </form>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Player Profile - Simon's Game</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Courier New", monospace;
+        background: linear-gradient(
+          135deg,
+          #0c0c0c 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        color: #e0e6ed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Subtle background pattern */
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(
+            circle at 20% 80%,
+            rgba(120, 119, 198, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 119, 198, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(120, 219, 255, 0.1) 0%,
+            transparent 50%
+          );
+        pointer-events: none;
+      }
+
+      .profile-container {
+        background: rgba(15, 15, 35, 0.9);
+        border: 1px solid rgba(64, 224, 208, 0.3);
+        border-radius: 20px;
+        padding: 3rem;
+        max-width: 500px;
+        width: 90%;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 1;
+      }
+
+      .profile-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 20px;
+        background: linear-gradient(
+          45deg,
+          rgba(64, 224, 208, 0.1),
+          rgba(255, 20, 147, 0.1)
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+      }
+
+      .profile-container:hover::before {
+        opacity: 1;
+      }
+
+      .profile-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+      }
+
+      .profile-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #40e0d0;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(64, 224, 208, 0.5);
+      }
+
+      .profile-subtitle {
+        font-size: 0.9rem;
+        color: #8892b0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .player-avatar {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #40e0d0, #ff1493);
+        border-radius: 50%;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0f0f23;
+        box-shadow: 0 0 20px rgba(64, 224, 208, 0.4);
+      }
+
+      .stats-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+
+      .stat-item {
+        background: rgba(30, 30, 60, 0.6);
+        border: 1px solid rgba(64, 224, 208, 0.2);
+        border-radius: 12px;
+        padding: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(64, 224, 208, 0.1),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .stat-item:hover {
+        border-color: rgba(64, 224, 208, 0.5);
+        transform: translateX(5px);
+      }
+
+      .stat-item:hover::before {
+        left: 100%;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: #8892b0;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .stat-value {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #40e0d0;
+        text-shadow: 0 0 5px rgba(64, 224, 208, 0.3);
+      }
+
+      .stat-icon {
+        width: 20px;
+        height: 20px;
+        background: rgba(64, 224, 208, 0.2);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+      }
+
+      .action-container {
+        text-align: center;
+      }
+
+      .edit-btn {
+        background: linear-gradient(135deg, #40e0d0, #20b2aa);
+        color: #0f0f23;
+        border: none;
+        padding: 1rem 2.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(64, 224, 208, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .edit-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .edit-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(64, 224, 208, 0.4);
+      }
+
+      .edit-btn:hover::before {
+        left: 100%;
+      }
+
+      .edit-btn:active {
+        transform: translateY(0);
+      }
+
+      /* Responsive design */
+      @media (max-width: 600px) {
+        .profile-container {
+          padding: 2rem;
+          margin: 1rem;
+        }
+
+        .profile-title {
+          font-size: 1.8rem;
+        }
+
+        .player-avatar {
+          width: 60px;
+          height: 60px;
+          font-size: 1.5rem;
+        }
+      }
+
+      /* Subtle animations */
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .profile-title {
+        animation: pulse 3s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-container">
+      <div class="profile-header">
+        <div class="player-avatar">
+          <!-- Using first letter of username as avatar -->
+          <%= user.username.charAt(0).toUpperCase() %>
+        </div>
+        <h1 class="profile-title">Welcome,<%= user.username %></h1>
+        <p class="profile-subtitle">Player Profile</p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-label">
+            <div class="stat-icon">👤</div>
+            Username
+          </div>
+          <div class="stat-value"><%= user.username %></div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-label">
+            <div class="stat-icon">📧</div>
+            Email
+          </div>
+          <div class="stat-value"><%= user.email %></div>
+        </div>
+
+        <div class="stat-item">
+          <div class="stat-label">
+            <div class="stat-icon">🏆</div>
+            Highest Score
+          </div>
+          <div class="stat-value"><%= user.hscore %></div>
+        </div>
+      </div>
+
+      <div class="action-container">
+        <form method="get" action="/user/<%=user.id%>/edit-choice">
+          <button type="submit" class="edit-btn">Edit Profile</button>
+        </form>
+        <br />
+        <form method="get" action="/user/<%=user.id%>/delete/verify-password">
+          <button type="submit" class="edit-btn">Delete Profile</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

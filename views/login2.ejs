@@ -1,0 +1,620 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration</title>
+  </head>
+  <body>
+    <h2>Register here:</h2>
+    <form method="post" action="/user/register">
+      <input placeholder="enter username" name="username" />
+      <br />
+      <br />
+      <br />
+      <input placeholder="enter email" name="email" type="email" />
+      <br />
+      <br />
+      <br />
+      <input placeholder="enter password" name="password" type="password" />
+      <br />
+      <br />
+      <br />
+      <% if (message) { %>
+      <p style="color: red"><%= message %></p>
+      <% } %>
+      <br />
+      <br />
+      <br />
+
+      <button>Register</button>
+    </form>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIMONS Player Registration</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Rajdhani", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #0c0c0c 0%,
+          #1a1a2e 50%,
+          #16213e 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Animated background particles */
+      .bg-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #00d4ff;
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+          opacity: 0.7;
+        }
+        50% {
+          transform: translateY(-20px) rotate(180deg);
+          opacity: 1;
+        }
+      }
+
+      /* Glitch effect for background */
+      .glitch-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent 49%,
+          rgba(0, 212, 255, 0.03) 50%,
+          transparent 51%
+        );
+        animation: glitch-bg 3s ease-in-out infinite;
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      @keyframes glitch-bg {
+        0%,
+        90%,
+        100% {
+          opacity: 0;
+        }
+        95% {
+          opacity: 1;
+        }
+      }
+
+      .container {
+        background: rgba(15, 15, 35, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 20px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          0 0 50px rgba(0, 212, 255, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 212, 255, 0.1),
+          transparent
+        );
+        animation: scan 3s ease-in-out infinite;
+      }
+
+      @keyframes scan {
+        0% {
+          left: -100%;
+        }
+        100% {
+          left: 100%;
+        }
+      }
+
+      .logo {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .logo h1 {
+        font-family: "Orbitron", monospace;
+        font-size: 2.5rem;
+        font-weight: 900;
+        background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradient-shift 3s ease infinite;
+        text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+      }
+
+      @keyframes gradient-shift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .subtitle {
+        color: #a0a0a0;
+        font-size: 1.2rem;
+        font-weight: 300;
+        margin-top: 0.5rem;
+        text-align: center;
+      }
+
+      .form-group {
+        position: relative;
+        margin-bottom: 2rem;
+      }
+
+      .form-group label {
+        position: absolute;
+        top: -0.8rem;
+        left: 1rem;
+        background: rgba(15, 15, 35, 0.9);
+        padding: 0 0.5rem;
+        color: #00d4ff;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 1.2rem 1.5rem;
+        background: rgba(0, 0, 0, 0.3);
+        border: 2px solid rgba(0, 212, 255, 0.3);
+        border-radius: 12px;
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-family: "Rajdhani", sans-serif;
+        transition: all 0.3s ease;
+        outline: none;
+      }
+
+      .form-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+        font-style: italic;
+      }
+
+      .form-input:focus {
+        border-color: #00d4ff;
+        box-shadow: 0 0 20px rgba(0, 212, 255, 0.3),
+          inset 0 0 20px rgba(0, 212, 255, 0.1);
+        transform: translateY(-2px);
+      }
+
+      .form-input:valid {
+        border-color: #4ecdc4;
+      }
+
+      .register-btn {
+        width: 100%;
+        padding: 1.3rem;
+        background: linear-gradient(45deg, #00d4ff, #0099cc);
+        border: none;
+        border-radius: 12px;
+        color: #000;
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: "Orbitron", monospace;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-top: 1rem;
+      }
+
+      .register-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .register-btn:hover::before {
+        left: 100%;
+      }
+
+      .register-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 212, 255, 0.4);
+        background: linear-gradient(45deg, #00e4ff, #00b3dd);
+      }
+
+      .register-btn:active {
+        transform: translateY(-1px);
+      }
+
+      .error-message {
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid #ff6b6b;
+        border-radius: 8px;
+        padding: 1rem;
+        color: #ff6b6b;
+        text-align: center;
+        margin: 1rem 0;
+        font-weight: 500;
+        animation: error-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes error-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.7;
+        }
+      }
+
+      .status-indicators {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .status-dot:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .status-dot:nth-child(2) {
+        animation-delay: 0.3s;
+      }
+      .status-dot:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+          background: #00d4ff;
+        }
+      }
+
+      /* Loading state */
+      .loading .register-btn {
+        background: rgba(0, 212, 255, 0.3);
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      .loading .register-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        margin: -10px 0 0 -10px;
+        border: 2px solid rgba(0, 0, 0, 0.3);
+        border-top: 2px solid #000;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Responsive design */
+      @media (max-width: 480px) {
+        .container {
+          margin: 1rem;
+          padding: 2rem;
+        }
+
+        .logo h1 {
+          font-size: 2rem;
+        }
+      }
+
+      /* Input validation styles */
+      .form-input.invalid {
+        border-color: #ff6b6b;
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+      }
+
+      .form-input.valid {
+        border-color: #4ecdc4;
+        box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated background -->
+    <div class="bg-particles" id="particles"></div>
+    <div class="glitch-bg"></div>
+
+    <div class="container" id="formContainer">
+      <div class="logo">
+        <h1>SIMONS GAME</h1>
+        <p class="subtitle">Join the Challenge</p>
+      </div>
+
+      <form method="post" action="/user/login" id="loginForm">
+        <div class="form-group">
+          <label for="username">Player ID/ USERNAME</label>
+          <input
+            class="form-input"
+            placeholder="Enter your unique player ID"
+            name="username"
+            id="username"
+            required
+          />
+        </div>
+
+        <!-- <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            class="form-input"
+            placeholder="Enter your email address"
+            name="email"
+            id="email"
+            type="email"
+            required
+          />
+        </div> -->
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            class="form-input"
+            placeholder="Enter your password "
+            name="password"
+            id="password"
+            type="password"
+            required
+          />
+        </div>
+
+        <!-- Server-side error message placeholder -->
+        <div id="serverMessage" style="display: none">
+          <div class="error-message">
+            <span id="messageText"></span>
+          </div>
+        </div>
+        <% if (message) { %>
+        <p style="color: red"><%= message %></p>
+        <% } %>
+
+        <button type="submit" class="register-btn" id="submitBtn">
+          <span id="btnText">Login</span>
+        </button>
+
+        <div class="status-indicators">
+          <div class="status-dot"></div>
+          <div class="status-dot"></div>
+          <div class="status-dot"></div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      // Create floating particles
+      function createParticles() {
+        const particlesContainer = document.getElementById("particles");
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+          particle.style.left = Math.random() * 100 + "%";
+          particle.style.top = Math.random() * 100 + "%";
+          particle.style.animationDelay = Math.random() * 6 + "s";
+          particle.style.animationDuration = Math.random() * 3 + 3 + "s";
+          particlesContainer.appendChild(particle);
+        }
+      }
+
+      // Form validation
+      function validateInput(input) {
+        const value = input.value.trim();
+
+        if (input.type === "email") {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (emailRegex.test(value)) {
+            input.classList.remove("invalid");
+            input.classList.add("valid");
+            return true;
+          } else {
+            input.classList.remove("valid");
+            input.classList.add("invalid");
+            return false;
+          }
+        } else if (input.name === "password") {
+          if (value.length >= 6) {
+            input.classList.remove("invalid");
+            input.classList.add("valid");
+            return true;
+          } else {
+            input.classList.remove("valid");
+            input.classList.add("invalid");
+            return false;
+          }
+        } else {
+          if (value.length >= 3) {
+            input.classList.remove("invalid");
+            input.classList.add("valid");
+            return true;
+          } else {
+            input.classList.remove("valid");
+            input.classList.add("invalid");
+            return false;
+          }
+        }
+      }
+
+      // Real-time validation
+      document.querySelectorAll(".form-input").forEach((input) => {
+        input.addEventListener("input", () => validateInput(input));
+        input.addEventListener("blur", () => validateInput(input));
+      });
+
+      // Form submission with loading state
+      document
+        .getElementById("registrationForm")
+        .addEventListener("submit", function (e) {
+          const formContainer = document.getElementById("formContainer");
+          const submitBtn = document.getElementById("submitBtn");
+          const btnText = document.getElementById("btnText");
+
+          // Add loading state
+          formContainer.classList.add("loading");
+          btnText.textContent = "PROCESSING...";
+
+          // Validate all inputs
+          let isValid = true;
+          document.querySelectorAll(".form-input").forEach((input) => {
+            if (!validateInput(input)) {
+              isValid = false;
+            }
+          });
+
+          if (!isValid) {
+            e.preventDefault();
+            formContainer.classList.remove("loading");
+            btnText.textContent = "Initialize Player";
+
+            // Show error message
+            showMessage(
+              "Invalid input detected. Please check all fields.",
+              "error"
+            );
+          }
+        });
+
+      // Show message function (for client-side errors or success)
+      function showMessage(message, type = "error") {
+        const serverMessage = document.getElementById("serverMessage");
+        const messageText = document.getElementById("messageText");
+
+        messageText.textContent = message;
+        serverMessage.style.display = "block";
+
+        if (type === "success") {
+          serverMessage.querySelector(".error-message").style.background =
+            "rgba(78, 205, 196, 0.1)";
+          serverMessage.querySelector(".error-message").style.borderColor =
+            "#4ecdc4";
+          serverMessage.querySelector(".error-message").style.color = "#4ecdc4";
+        }
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          serverMessage.style.display = "none";
+        }, 5000);
+      }
+
+      // Initialize particles when page loads
+      document.addEventListener("DOMContentLoaded", createParticles);
+
+      // Add glitch effect on form focus
+      document.querySelectorAll(".form-input").forEach((input) => {
+        input.addEventListener("focus", function () {
+          this.style.animation = "none";
+          setTimeout(() => {
+            this.style.animation = "";
+          }, 10);
+        });
+      });
+
+      // Simulate server message (remove this in production)
+      // This is just to demonstrate the error message styling
+      // In your actual implementation, the server will provide the message
+      /*
+        setTimeout(() => {
+            showMessage('Username already exists in the network', 'error');
+        }, 2000);
+        */
+    </script>
+  </body>
+</html>
