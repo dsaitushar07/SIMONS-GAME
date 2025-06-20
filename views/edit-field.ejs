@@ -344,7 +344,7 @@
       <form
         class="edit-form"
         method="POST"
-        action="/user/<%= user.id %>/edit-field"
+        action="/user/<%= user.id %>/edit-field?_method=PATCH"
       >
         <input type="hidden" name="field" value="<%= field %>" />
 

@@ -285,7 +285,7 @@
 
       <form
         class="verify-form"
-        action="/user/<%= id %>/delete/verify-password"
+        action="/user/<%= id %>/delete/verify-password?_method=DELETE"
         method="POST"
       >
         <input type="hidden" name="field" value="<%= field %>" />
@@ -303,7 +303,9 @@
         </div>
         <p>*By Clicking This Button All Your Data Will Be Deleted</p>
         <p>
-          <button type="submit" class="verify-btn">Verify Password</button>
+          <button type="submit" class="verify-btn">
+            Verify Password and Delete
+          </button>
         </p>
       </form>
 

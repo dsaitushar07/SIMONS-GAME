@@ -230,7 +230,7 @@ app.get("/user/:id/delete/verify-password", (req, res) => {
 });
 
 //route to verify password and deleting user
-app.post("/user/:id/delete/verify-password", (req, res) => {
+app.delete("/user/:id/delete/verify-password", (req, res) => {
   const { password, field } = req.body;
   const id = req.params.id;
 
@@ -309,7 +309,7 @@ app.get("/user/:id/edit-field", (req, res) => {
 });
 
 //route handling update
-app.post("/user/:id/edit-field", (req, res) => {
+app.patch("/user/:id/edit-field", (req, res) => {
   const { id } = req.params;
   const { field, newValue, password } = req.body;
 

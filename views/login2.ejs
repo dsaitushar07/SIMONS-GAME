@@ -1,43 +1,9 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Registration</title>
-  </head>
-  <body>
-    <h2>Register here:</h2>
-    <form method="post" action="/user/register">
-      <input placeholder="enter username" name="username" />
-      <br />
-      <br />
-      <br />
-      <input placeholder="enter email" name="email" type="email" />
-      <br />
-      <br />
-      <br />
-      <input placeholder="enter password" name="password" type="password" />
-      <br />
-      <br />
-      <br />
-      <% if (message) { %>
-      <p style="color: red"><%= message %></p>
-      <% } %>
-      <br />
-      <br />
-      <br />
-
-      <button>Register</button>
-    </form>
-  </body>
-</html> -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SIMONS Player Registration</title>
+    <title>Simons Game Login</title>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap");
 
@@ -48,7 +14,9 @@
       }
 
       body {
-        font-family: "Rajdhani", sans-serif;
+        /* font-family: "Rajdhani", sans-serif; */
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
         background: linear-gradient(
           135deg,
           #0c0c0c 0%,
@@ -406,6 +374,10 @@
       .form-input.valid {
         border-color: #4ecdc4;
         box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
       }
     </style>
   </head>
