@@ -35,7 +35,7 @@ app.use(
   })
 );
 
-let port = 8080;
+let port = process.env.PORT || 8080;
 
 app.get("/", (req, res) => {
   res.render("started-home.ejs");
