@@ -17,14 +17,34 @@ app.use(express.urlencoded({ extended: true })); // For form data
 app.use(methodOverride("_method"));
 
 //for establishing mysql connection
-const mysql = require("mysql2");
 const { error } = require("console");
 
-const db = mysql.createConnection({
+// const db = mysql.createConnection({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   database: process.env.DB_NAME,
+//   password: process.env.DB_PASSWORD,
+// });
+
+const mysql = require("mysql2");
+
+const db = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
+});
+
+db.getConnection((err, connection) => {
+  if (err) {
+    console.error("Database connection error:", err);
+  } else {
+    console.log("Connected to MySQL");
+    connection.release();
+  }
 });
 
 app.use(
@@ -375,23 +395,20 @@ app.patch("/user/:id/edit-field", (req, res) => {
 });
 
 //handling leaderboard
-app.get("/user/:id/leaderboard", (req, res) => {
-  const userId = parseInt(req.params.id); // Convert to integer
-  const page = parseInt(req.query.page) || 1;
-  const pageSize = 10;
-  const offset = (page - 1) * pageSize;
 
-  // Fetch all users ordered to compute rank of current user
+app.get("/user/:id/leaderboard", (req, res) => {
+  const userId = req.params.id;
+
   const rankQuery = `
     SELECT id, username, hscore FROM users
     ORDER BY hscore DESC
+    LIMIT 10
   `;
 
-  db.query(rankQuery, (err, allResults) => {
+  db.query(rankQuery, (err, results) => {
     if (err) return res.status(500).send("DB error");
 
-    // Calculate ranks
-    const leaderboard = allResults.map((user, index) => ({
+    const leaderboard = results.map((user, index) => ({
       rank: index + 1,
       id: user.id,
       username: user.username,
@@ -399,14 +416,11 @@ app.get("/user/:id/leaderboard", (req, res) => {
     }));
 
     const currentUserEntry = leaderboard.find((u) => u.id === userId);
-    const paginatedLeaderboard = leaderboard.slice(offset, offset + pageSize);
 
     res.render("leaderboard.ejs", {
-      leaderboard: paginatedLeaderboard,
+      leaderboard,
       currentUser: currentUserEntry,
-      currentPage: page,
-      totalPages: Math.ceil(allResults.length / pageSize),
-      userId, // Now this is an integer
+      userId,
     });
   });
 });
